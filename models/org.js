@@ -12,6 +12,10 @@ const orgSchema = new Schema({
             type: String
         }],
         require: true
+    },
+    creator: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
