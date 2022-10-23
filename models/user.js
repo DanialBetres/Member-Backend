@@ -15,10 +15,12 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
-    createdOrgs: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Org'
-    }]
+    createdOrgs: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Org'
+        }
+    ]
 })
 
 module.exports = mongoose.model('User', userSchema)
