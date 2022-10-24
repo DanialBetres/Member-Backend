@@ -16,6 +16,15 @@ module.exports = buildSchema(`
         createdOrgs: [Org!]
     }
 
+    type Membership {
+        _id: ID!
+        org: Org!
+        user: User!
+        tierIndex: Int!
+        createdAt: String!
+        updatedAt: String!
+    }
+
     input OrgInput {
         name: String!
         tiers: [String!]!
@@ -27,13 +36,21 @@ module.exports = buildSchema(`
         password: String!
     }
 
+    input MembershipInput {
+        orgId: ID!
+        tierIndex: Int!
+    }
+
     type RootQuery {
         orgs: [Org!]!
+        memberships: [Membership!]!
     }
 
     type RootMutation {
-        createOrg(orgInput: OrgInput): Org
-        createUser(userInput: UserInput): User
+        createOrg(orgInput: OrgInput!): Org
+        createUser(userInput: UserInput!): User
+        addMembership(membershipInput: MembershipInput!): Membership!
+        removeMembership(membershipId: ID!): Org!
     }
 
     schema {

@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 
-const Org = require('../../models/org')
-const User = require('../../models/user')
+const Org = require('../../models/org');
+const User = require('../../models/user');
+const Membership = require("../../models/membership");
 
 const orgs = async (orgIds) => {
     try {
@@ -14,6 +15,21 @@ const orgs = async (orgIds) => {
                 creator: user.bind(this, org.creator)
             }
         })
+    } catch (err) {
+        throw err;
+    }
+}
+
+const singleOrg = async (orgId) => {
+    try {
+        const org = await Org.findById(orgId);
+
+        return {
+            ...org._doc,
+            _id: org.id,
+            creator: user.bind(this, org.creator)
+        };
+
     } catch (err) {
         throw err;
     }
@@ -47,6 +63,26 @@ module.exports = {
             })
         } catch (err) {
             throw err
+        }
+    },
+
+    memberships: async () => {
+        try {
+            const memberships = await Membership.find();
+
+            return memberships.map((membership) => {
+                return { 
+                    ...membership._doc, 
+                    _id: membership.id,
+                    user: user.bind(this, membership._doc.user),
+                    org: singleOrg.bind(this, membership._doc.org),
+                    createdAt: new Date(membership._doc.createdAt).toISOString(),
+                    updatedAt: new Date(membership._doc.updatedAt).toISOString()
+                }
+            })
+
+        } catch (err) {
+            throw err;
         }
     },
 
@@ -105,6 +141,60 @@ module.exports = {
                 _id: userSaveRes.id
             }
 
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    addMembership: async (args) => {
+        try {
+            const fetchedOrg = await Org.findOne({ _id: args.membershipInput.orgId });
+
+            if (!fetchedOrg) {
+                throw new Error("Org does not exist")
+            }
+
+            const membership = new Membership({
+                org: fetchedOrg,
+                user: "6354f5f6d9fde355cc39e9c6",
+                tierIndex: args.membershipInput.tierIndex
+            })
+
+            const result = await membership.save();
+
+            return {
+                ...result._doc,
+                _id: result.id,
+                user: user.bind(this, result._doc.user),
+                org: singleOrg.bind(this, result._doc.org),
+                createdAt: new Date(result._doc.createdAt).toISOString(),
+                updatedAt: new Date(result._doc.updatedAt).toISOString()
+            }
+
+        } catch (err) {
+            throw err;
+        }
+    },
+
+    removeMembership: async (args) => {
+        try {
+            const membership = await Membership.findById(args.membershipId).populate('org');
+
+            console.log(membership);
+
+            if (!membership) {
+                throw new Error("Membership does not exist")
+            }
+
+            const org = { 
+                ...membership.org._doc,
+                _id: membership.org.id,
+                creator: user.bind(this, membership.org._doc.creator)
+            }
+
+            await Membership.deleteOne({ _id: args.membershipId })
+
+            return org;
         } catch (err) {
             throw err;
         }
