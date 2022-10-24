@@ -16,7 +16,7 @@ app.use('/graphql', graphqlHttp({
     graphiql: true
 }));
 
-const DB_NAME = "member-dev"
+const DB_NAME = "member-dev";
 mongoose
     .connect(`mongodb+srv://Member:HrC6UODWUzGYLClv@cluster0.dbjv1kp.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`)
     .then(() => {
