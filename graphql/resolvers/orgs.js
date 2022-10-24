@@ -14,11 +14,17 @@ module.exports = {
         }
     },
 
-    createOrg: async (args) => {
+    createOrg: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
+
+
+
         const org = new Org({
             name: args.orgInput.name,
             tiers: args.orgInput.tiers,
-            creator: "6356468826e36f3e53ad6a00"
+            creator: req.userId
         });
 
         try {
@@ -26,7 +32,7 @@ module.exports = {
     
             const createdOrg = transformOrg(orgSaveRes);
     
-            const curUser = await User.findById('6356468826e36f3e53ad6a00');
+            const curUser = await User.findById(req.userId);
     
             if (!curUser) {
                 throw new Error("User doesn't exist"); 
