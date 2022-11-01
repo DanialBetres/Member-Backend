@@ -57,6 +57,7 @@ module.exports = buildSchema(`
         createOrg(orgInput: OrgInput!): Org
         deleteOrg(orgId: ID!): Org!
         createUser(userInput: UserInput!): User
+        deleteUser(userId: ID!): User!
         addMembership(membershipInput: MembershipInput!): Membership!
         removeMembership(membershipId: ID!): Org!
     }
