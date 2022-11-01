@@ -55,6 +55,7 @@ module.exports = buildSchema(`
 
     type RootMutation {
         createOrg(orgInput: OrgInput!): Org
+        updateOrg(orgId: ID!, orgInput: OrgInput!): Org
         deleteOrg(orgId: ID!): Org!
         createUser(userInput: UserInput!): User
         deleteUser(userId: ID!): User!
