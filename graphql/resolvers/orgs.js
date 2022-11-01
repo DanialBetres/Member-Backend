@@ -44,6 +44,34 @@ module.exports = {
         }
     },
 
+    updateOrg: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
+
+        try {
+            const curOrg = await Org.findById(args.orgId);
+
+            if (!curOrg) {
+                throw new Error("Org does not exist");
+            }
+
+            const orgUpdateRes = 
+                await Org.findByIdAndUpdate(
+                    args.orgId, 
+                    { 
+                        name: args.orgInput.name, 
+                        tiers: args.orgInput.tiers
+                    },
+                    { new: true }
+                )
+
+            return transformOrg(orgUpdateRes);
+        } catch (err) {
+            throw err;
+        }
+    },
+
     deleteOrg: async (args, req) => {
         if (!req.isAuth) {
             throw new Error('Unauthenticated');
