@@ -49,6 +49,7 @@ module.exports = buildSchema(`
 
     type RootQuery {
         orgs: [Org!]!
+        orgById(orgId: ID!): Org
         memberships: [Membership!]!
         login(email: String!, password: String!): AuthData!
     }
