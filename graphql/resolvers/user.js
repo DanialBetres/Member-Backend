@@ -6,6 +6,30 @@ const Org = require('../../models/org');
 const Membership = require('../../models/membership')
 
 module.exports = {
+    users: async () => {
+        try {
+            const users = await User.find();
+
+            return users.map((user) => ({ ...user._doc, password: null, _id: user.id }));
+        } catch (err) {
+            throw err
+        }
+    }, 
+
+    userById: async (args) => {
+        try {
+            const user = await User.findById(args.userId);
+
+            if (!user) {
+                return null;
+            }
+
+            return { ...user._doc, password: null, _id: user.id };
+        } catch (err) {
+            throw err
+        }
+    },
+
     createUser: async (args) => {
         try {
             const existingUser = await User.findOne({ email: args.userInput.email });

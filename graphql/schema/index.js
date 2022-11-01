@@ -50,6 +50,8 @@ module.exports = buildSchema(`
     type RootQuery {
         orgs: [Org!]!
         orgById(orgId: ID!): Org
+        users: [User!]!
+        userById(userId: ID!): User
         memberships: [Membership!]!
         login(email: String!, password: String!): AuthData!
     }
