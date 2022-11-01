@@ -18,6 +18,26 @@ module.exports = {
         }
     },
 
+    /*
+        membershipByOrgId(orgId: ID!): Membership
+        membershipByUserId(userId: ID!): Membership
+        membershipById(membershipId: ID!): Membership
+    */
+
+    membershipByOrgId: async (args) => {
+        throw new Error("Implement")
+        // Paused Because the above query for all memberships only displays memberships if user is authenticated. 
+        // Decide new Behavior and then implement
+    },
+
+    membershipByUserId: async (args) => {
+        throw new Error("Implement")
+    },
+
+    membershipById: async (args) => {
+        throw new Error("Implement")
+    },
+
     addMembership: async (args, req) => {
         if (!req.isAuth) {
             throw new Error('Unauthenticated');

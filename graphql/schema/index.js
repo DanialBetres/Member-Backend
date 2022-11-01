@@ -53,6 +53,9 @@ module.exports = buildSchema(`
         users: [User!]!
         userById(userId: ID!): User
         memberships: [Membership!]!
+        membershipByOrgId(orgId: ID!): Membership
+        membershipByUserId(userId: ID!): Membership
+        membershipById(membershipId: ID!): Membership
         login(email: String!, password: String!): AuthData!
     }
 
