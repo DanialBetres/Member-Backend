@@ -15,6 +15,20 @@ module.exports = {
         }
     },
 
+    orgById: async (args) => {
+        try {
+            const org = await Org.findById(args.orgId);
+
+            if (!org) {
+                return null;
+            }
+
+            return transformOrg(org);
+        } catch (err) {
+            throw err
+        }
+    },
+
     createOrg: async (args, req) => {
         if (!req.isAuth) {
             throw new Error('Unauthenticated');
