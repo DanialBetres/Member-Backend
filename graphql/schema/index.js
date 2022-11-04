@@ -21,6 +21,7 @@ module.exports = buildSchema(`
         org: Org!
         user: User!
         tierIndex: Int!
+        isAdmin: Boolean!
         createdAt: String!
         updatedAt: String!
     }
@@ -45,6 +46,7 @@ module.exports = buildSchema(`
     input MembershipInput {
         orgId: ID!
         tierIndex: Int!
+        isAdmin: Boolean!
     }
 
     type RootQuery {

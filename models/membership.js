@@ -16,6 +16,10 @@ const membershipSchema = new Schema({
     tierIndex: {
         type: Number,
         required: true
+    },
+    isAdmin: {
+        type: Boolean,
+        required: true
     }
 }, { timestamps: true })
 
