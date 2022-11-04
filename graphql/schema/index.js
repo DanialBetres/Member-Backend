@@ -24,6 +24,7 @@ module.exports = buildSchema(`
         isAdmin: Boolean!
         createdAt: String!
         updatedAt: String!
+        expiry: String
     }
 
     type AuthData {
@@ -47,6 +48,7 @@ module.exports = buildSchema(`
         orgId: ID!
         tierIndex: Int!
         isAdmin: Boolean!
+        expiry: String
     }
 
     type RootQuery {

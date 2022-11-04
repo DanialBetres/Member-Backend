@@ -20,6 +20,11 @@ const membershipSchema = new Schema({
     isAdmin: {
         type: Boolean,
         required: true
+    },
+    expiry: {
+        type: Date,
+        require: false,
+        default: null
     }
 }, { timestamps: true })
 

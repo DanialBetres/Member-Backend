@@ -18,7 +18,8 @@ const transformMembership = (membership) => {
         user: user.bind(this, membership._doc.user),
         org: singleOrg.bind(this, membership._doc.org),
         createdAt: dateToString(membership._doc.createdAt),
-        updatedAt: dateToString(membership._doc.updatedAt)
+        updatedAt: dateToString(membership._doc.updatedAt),
+        expiry: dateToString(membership._doc.expiry)
     };
 }
 

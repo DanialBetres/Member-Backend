@@ -81,7 +81,8 @@ module.exports = {
                 org: fetchedOrg,
                 user: req.userId,
                 tierIndex: args.membershipInput.tierIndex,
-                isAdmin: args.membershipInput.isAdmin
+                isAdmin: args.membershipInput.isAdmin,
+                expiry: new Date(args.membershipInput.expiry)
             });
 
             const result = await membership.save();
