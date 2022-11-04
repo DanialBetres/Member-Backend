@@ -1,4 +1,5 @@
 const Org = require("../../models/org")
+const User = require("../../models/user")
 const Membership = require("../../models/membership");
 
 const { transformOrg, transformMembership } = require('./merge')
@@ -18,24 +19,50 @@ module.exports = {
         }
     },
 
-    /*
-        membershipByOrgId(orgId: ID!): Membership
-        membershipByUserId(userId: ID!): Membership
-        membershipById(membershipId: ID!): Membership
-    */
-
     membershipByOrgId: async (args) => {
-        throw new Error("Implement")
-        // Paused Because the above query for all memberships only displays memberships if user is authenticated. 
-        // Decide new Behavior and then implement
+        try {
+            const org = await Org.findById(args.orgId);
+
+            if (!org) {
+                throw new Error("Org does not exist.");
+            }
+
+            const fetchedMemberships = await Membership.find({ org: args.orgId });
+
+            return fetchedMemberships.map((membership) => transformMembership(membership));
+        } catch (err) {
+            throw err;
+        }
     },
 
     membershipByUserId: async (args) => {
-        throw new Error("Implement")
+        try {
+            const user = await User.findById(args.userId);
+
+            if (!user) {
+                throw new Error("User does not exist.");
+            }
+
+            const fetchedMemberships = await Membership.find({ user: args.userId });
+
+            return fetchedMemberships.map((membership) => transformMembership(membership));
+        } catch (err) {
+            throw err;
+        }
     },
 
     membershipById: async (args) => {
-        throw new Error("Implement")
+        try {
+            const fetchedMembership = await Membership.findOne({ _id: args.membershipId });
+
+            if (!fetchedMembership) {
+                throw new Error("Membership does not exist.");
+            }
+
+            return transformMembership(fetchedMembership);
+        } catch (err) {
+            throw err;
+        }
     },
 
     addMembership: async (args, req) => {

@@ -50,12 +50,15 @@ module.exports = buildSchema(`
     type RootQuery {
         orgs: [Org!]!
         orgById(orgId: ID!): Org
+
         users: [User!]!
         userById(userId: ID!): User
+
         memberships: [Membership!]!
-        membershipByOrgId(orgId: ID!): Membership
-        membershipByUserId(userId: ID!): Membership
+        membershipByOrgId(orgId: ID!): [Membership]!
+        membershipByUserId(userId: ID!): [Membership]!
         membershipById(membershipId: ID!): Membership
+
         login(email: String!, password: String!): AuthData!
     }
 
@@ -63,8 +66,10 @@ module.exports = buildSchema(`
         createOrg(orgInput: OrgInput!): Org
         updateOrg(orgId: ID!, orgInput: OrgInput!): Org
         deleteOrg(orgId: ID!): Org!
+
         createUser(userInput: UserInput!): User
         deleteUser(userId: ID!): User!
+        
         addMembership(membershipInput: MembershipInput!): Membership!
         removeMembership(membershipId: ID!): Org!
     }
