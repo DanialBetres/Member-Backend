@@ -77,12 +77,20 @@ module.exports = {
                 throw new Error("Org does not exist");
             }
 
+            const getExpiryDate = () => {
+                if (args.membershipInput.expiry) {
+                    return new Date(args.membershipInput.expiry)
+                } else {
+                    return null;
+                }
+            }
+
             const membership = new Membership({
                 org: fetchedOrg,
                 user: req.userId,
                 tierIndex: args.membershipInput.tierIndex,
                 isAdmin: args.membershipInput.isAdmin,
-                expiry: new Date(args.membershipInput.expiry)
+                expiry: getExpiryDate()
             });
 
             const result = await membership.save();
