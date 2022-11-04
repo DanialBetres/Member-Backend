@@ -80,7 +80,8 @@ module.exports = {
             const membership = new Membership({
                 org: fetchedOrg,
                 user: req.userId,
-                tierIndex: args.membershipInput.tierIndex
+                tierIndex: args.membershipInput.tierIndex,
+                isAdmin: args.membershipInput.isAdmin
             });
 
             const result = await membership.save();
