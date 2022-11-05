@@ -4,6 +4,8 @@ const Membership = require("../../models/membership");
 
 const { transformOrg, transformMembership } = require('./merge')
 
+const { dateStringToDate } = require('../../utils/date');
+
 module.exports = {
     memberships: async (args, req) => {
         if (!req.isAuth) {
@@ -77,20 +79,12 @@ module.exports = {
                 throw new Error("Org does not exist");
             }
 
-            const getExpiryDate = () => {
-                if (args.membershipInput.expiry) {
-                    return new Date(args.membershipInput.expiry)
-                } else {
-                    return null;
-                }
-            }
-
             const membership = new Membership({
                 org: fetchedOrg,
                 user: req.userId,
                 tierIndex: args.membershipInput.tierIndex,
                 isAdmin: args.membershipInput.isAdmin,
-                expiry: getExpiryDate()
+                expiry: dateStringToDate(args.membershipInput.expiry)
             });
 
             const result = await membership.save();
@@ -98,6 +92,35 @@ module.exports = {
             return transformMembership(result);
         } catch (err) {
             throw err;
+        }
+    },
+
+    updateMembership: async (args, req) => {
+        if (!req.isAuth) {
+            throw new Error('Unauthenticated');
+        }
+
+        try {
+            const curMembership = await Org.findById(args.orgId);
+
+            if (!curMembership) {
+                throw new Error("Membership does not exist");
+            }
+
+            const orgUpdateRes = 
+                await Org.findByIdAndUpdate(
+                    args.orgId, 
+                    { 
+                        tierIndex: args.membershipInput.tierIndex,
+                        isAdmin: args.membershipInput.isAdmin,
+                        expiry: dateStringToDate(args.membershipInput.expiry)
+                    },
+                    { new: true }
+                )
+            
+            return transformMembership(orgUpdateRes);
+        } catch (err) {
+            throw err
         }
     },
 

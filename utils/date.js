@@ -5,3 +5,11 @@ exports.dateToString = (date) => {
 
     return null;
 }
+
+exports.dateStringToDate = (dateString) => {
+    if (dateString) {
+        return new Date(dateString)
+    }
+
+    return null;
+}
