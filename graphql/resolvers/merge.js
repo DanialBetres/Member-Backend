@@ -59,6 +59,6 @@ const user = async (userId) => {
 
 // exports.orgs = orgs
 // exports.singleOrg = singleOrg
-// exports.user = user
+exports.user = user
 exports.transformOrg = transformOrg;
 exports.transformMembership = transformMembership;

@@ -54,6 +54,7 @@ module.exports = buildSchema(`
     type RootQuery {
         orgs: [Org!]!
         orgById(orgId: ID!): Org
+        orgAdmins(orgId: ID!): [User]!
 
         users: [User!]!
         userById(userId: ID!): User
