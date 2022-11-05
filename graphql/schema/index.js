@@ -58,6 +58,7 @@ module.exports = buildSchema(`
 
         users: [User!]!
         userById(userId: ID!): User
+        userAdminOrgs(userId: ID!): [Org]!
 
         memberships: [Membership!]!
         membershipByOrgId(orgId: ID!): [Membership]!
