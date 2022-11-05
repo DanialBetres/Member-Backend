@@ -2,7 +2,9 @@ const Org = require('../../models/org');
 const User = require("../../models/user");
 const Membership = require("../../models/membership");
 
-const { transformOrg } = require('./merge');
+const userResolver = require('./user');
+
+const { transformOrg, transformMembership } = require('./merge');
 
 module.exports = {
     orgs: async () => {
@@ -20,11 +22,33 @@ module.exports = {
             const org = await Org.findById(args.orgId);
 
             if (!org) {
-                return null;
+                throw new Error('Org does not exist.')
             }
 
             return transformOrg(org);
         } catch (err) {
+            throw err
+        }
+    },
+
+    orgAdmins: async (args) => {
+        try {
+            const org = await Org.findById(args.orgId);
+
+            if (!org) {
+                throw new Error('Org does not exist.')
+            }
+
+            // Get all Memberships for current orgs that are also Admins
+            const fetchedMemberships = await Membership.find({ org: args.orgId, isAdmin: true });
+
+            const userIds = fetchedMemberships.map((membership) => membership.user._id.toString());
+            const uniqueUserIds = [...new Set(userIds)]
+
+            return uniqueUserIds.map(async (userId) => {
+                return await userResolver.userById({ userId: userId })
+            });
+        } catch(err) {
             throw err
         }
     },
