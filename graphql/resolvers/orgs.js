@@ -4,7 +4,7 @@ const Membership = require("../../models/membership");
 
 const userResolver = require('./user');
 
-const { transformOrg, transformMembership } = require('./merge');
+const { transformOrg } = require('./merge');
 
 module.exports = {
     orgs: async () => {
