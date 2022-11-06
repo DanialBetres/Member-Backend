@@ -59,6 +59,7 @@ module.exports = buildSchema(`
 
         users: [User!]!
         userById(userId: ID!): User
+        userByEmail(email: String!): User
         userAdminOrgs(userId: ID!): [Org]!
 
         memberships: [Membership!]!
