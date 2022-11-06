@@ -101,7 +101,7 @@ module.exports = {
             }
 
             // Making sure that a request is being sent from authorized user
-            const isCreator = (org.creator._id.toString() === jwtPayload.userId);
+            const isCreator = (curOrg.creator._id.toString() === jwtPayload.userId);
             const isAdmin = await Membership.findOne({ org: args.orgId, isAdmin: true, user: jwtPayload.userId});
             
             if (!(isCreator || isAdmin)) {

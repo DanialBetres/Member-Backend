@@ -70,12 +70,33 @@ module.exports = {
             throw new Error('Unauthenticated');
         }
 
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]
+
+        const jwtPayload = parseJWT(token);
+
         try {
             const fetchedOrg = await Org.findOne({ _id: args.membershipInput.orgId });
 
             if (!fetchedOrg) {
                 throw new Error("Org does not exist");
             }
+
+            const fetchedUser = await Org.findOne({ _id: args.membershipInput.userId });
+
+            if (!fetchedUser) {
+                throw new Error("User does not exist");
+            }
+
+            // Making sure that a request is being sent from authorized user
+            const isCreator = (fetchedOrg.creator._id.toString() === jwtPayload.userId);
+            const isAdmin = await Membership.findOne({ org: args.orgId, isAdmin: true, user: jwtPayload.userId});
+            
+            if (!(isCreator || isAdmin)) {
+                throw new Error("Permission invalid.");
+            }
+
+            // Execute request
 
             const getExpiryDate = () => {
                 if (args.membershipInput.expiry) {
@@ -87,7 +108,7 @@ module.exports = {
 
             const membership = new Membership({
                 org: fetchedOrg,
-                user: req.userId,
+                user: fetchedUser,
                 tierIndex: args.membershipInput.tierIndex,
                 isAdmin: args.membershipInput.isAdmin,
                 expiry: getExpiryDate()
@@ -106,12 +127,27 @@ module.exports = {
             throw new Error('Unauthenticated');
         }
 
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]
+
+        const jwtPayload = parseJWT(token);
+
         try {
             const membership = await Membership.findById(args.membershipId).populate('org');
             
             if (!membership) {
                 throw new Error("Membership does not exist");
             }
+
+            // Making sure that a request is being sent from authorized user
+            const isCreator = (Org.findById(membership.org).creator._id.toString() === jwtPayload.userId);
+            const isAdmin = await Membership.findOne({ org: args.orgId, isAdmin: true, user: jwtPayload.userId});
+            
+            if (!(isCreator || isAdmin)) {
+                throw new Error("Permission invalid.");
+            }
+
+            // Execute request
 
             const org = transformOrg(membership.org);
 
