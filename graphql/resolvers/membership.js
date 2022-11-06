@@ -3,7 +3,6 @@ const User = require("../../models/user")
 const Membership = require("../../models/membership");
 
 const { transformOrg, transformMembership } = require('./merge')
-
 const { dateStringToDate } = require('../../utils/date');
 
 module.exports = {
