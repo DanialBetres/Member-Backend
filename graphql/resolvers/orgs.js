@@ -109,7 +109,6 @@ module.exports = {
             }
 
             // Execute request
-
             const orgUpdateRes = 
                 await Org.findByIdAndUpdate(
                     args.orgId, 

@@ -5,6 +5,8 @@ const User = require('../../models/user');
 const Org = require('../../models/org');
 const Membership = require('../../models/membership')
 
+
+const config = require('../../utils/config');
 const { transformOrg } = require('./merge');
 
 module.exports = {
@@ -138,14 +140,21 @@ module.exports = {
                 throw new Error("Login Unsuccesfull: Wrong Password")
             }
 
-            const token = jwt.sign({ userId: user.id, email: user.email }, 'someSuperSecretKey', {
-                expiresIn: '2h'
-            });
+            const token = jwt.sign(
+                { 
+                    userId: user.id, 
+                    email: user.email 
+                }, 
+                config.JWT_SECRET, 
+                {
+                    expiresIn: config.JWT_EXPIRY
+                }
+            );
 
             return {
                 userId: user.id,
                 token: token,
-                tokenExpiration: 1
+                tokenExpiration: config.JWT_EXPIRY
             }
         } catch (err) {
             throw err;

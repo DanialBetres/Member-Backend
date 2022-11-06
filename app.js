@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql').graphqlHTTP;
 const mongoose = require('mongoose');
+const config = require('./utils/config')
 
 const isAuth = require('./middleware/is-auth');
 
@@ -20,12 +21,11 @@ app.use('/graphql', graphqlHttp({
     graphiql: true
 }));
 
-const DB_NAME = "member-dev";
 mongoose
-    .connect(`mongodb+srv://Member:HrC6UODWUzGYLClv@cluster0.dbjv1kp.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`)
+    .connect(config.MONGODB_URI)
     .then(() => {
-        console.log('Connected to MongoDB. App running on port 3000.')
-        app.listen(3000)
+        console.log('Connected to MongoDB. App running on port: ' + config.PORT + ".")
+        app.listen(config.PORT)
     })
     .catch((err) => {
         console.log(err)
