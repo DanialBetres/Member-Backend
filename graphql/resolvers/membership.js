@@ -169,7 +169,6 @@ module.exports = {
             }
 
             // Execute request
-
             const org = transformOrg(membership.org);
 
             await Membership.deleteOne({ _id: args.membershipId });
