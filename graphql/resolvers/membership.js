@@ -99,15 +99,6 @@ module.exports = {
             }
 
             // Execute request
-
-            const getExpiryDate = () => {
-                if (args.membershipInput.expiry) {
-                    return new Date(args.membershipInput.expiry)
-                } else {
-                    return null;
-                }
-            }
-
             const membership = new Membership({
                 org: fetchedOrg,
                 user: fetchedUser,
