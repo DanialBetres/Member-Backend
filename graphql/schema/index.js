@@ -78,6 +78,7 @@ module.exports = buildSchema(`
         deleteUser(userId: ID!): User!
         
         addMembership(membershipInput: MembershipInput!): Membership!
+        updateMembership(membershipId: ID!, membershipInput: MembershipInput!): Membership
         removeMembership(membershipId: ID!): Org!
     }
 
