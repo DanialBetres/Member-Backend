@@ -46,6 +46,7 @@ module.exports = buildSchema(`
 
     input MembershipInput {
         orgId: ID!
+        userId: ID!
         tierIndex: Int!
         isAdmin: Boolean!
         expiry: String

@@ -5,6 +5,7 @@ const Membership = require("../../models/membership");
 const userResolver = require('./user');
 
 const { transformOrg } = require('./merge');
+const { parseJWT } = require('../../utils/parse');
 
 module.exports = {
     orgs: async () => {
@@ -87,12 +88,27 @@ module.exports = {
             throw new Error('Unauthenticated');
         }
 
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]
+
+        const jwtPayload = parseJWT(token);
+
         try {
             const curOrg = await Org.findById(args.orgId);
 
             if (!curOrg) {
                 throw new Error("Org does not exist");
             }
+
+            // Making sure that a request is being sent from authorized user
+            const isCreator = (curOrg.creator._id.toString() === jwtPayload.userId);
+            const isAdmin = await Membership.findOne({ org: args.orgId, isAdmin: true, user: jwtPayload.userId});
+            
+            if (!(isCreator || isAdmin)) {
+                throw new Error("Permission invalid.");
+            }
+
+            // Execute request
 
             const orgUpdateRes = 
                 await Org.findByIdAndUpdate(
@@ -115,6 +131,11 @@ module.exports = {
             throw new Error('Unauthenticated');
         }
 
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]
+
+        const jwtPayload = parseJWT(token);
+
         try {
             const org = await Org.findById(args.orgId).populate('creator');
 
@@ -122,6 +143,15 @@ module.exports = {
                 throw new Error("Org does not exist");
             }
 
+            // Making sure that a request is being sent from authorized user
+            const isCreator = (org.creator._id.toString() === jwtPayload.userId);
+            const isAdmin = await Membership.findOne({ org: args.orgId, isAdmin: true, user: jwtPayload.userId});
+            
+            if (!(isCreator || isAdmin)) {
+                throw new Error("Permission invalid.");
+            }
+
+            // Execute request
             await User.updateOne(
                 { _id: org.creator._id },
                 { $pull: { createdOrgs: args.orgId } }
